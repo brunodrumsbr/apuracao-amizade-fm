@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apuração 2º Turno – Rádio Amizade FM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#071528; --bg2:#0C2240; --card:#102B4F; --line:#1E3E68;
+    --txt:#FFFFFF; --muted:#A9BDD8;
+    --lula:#E3132C; --lula-d:#9E0A1C;
+    --flavio:#1F6FEB; --flavio-d:#0F3F94;
+    --gold:#FFC629; --green:#22C55E; --grey:#5B6B82;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--txt);font-family:Inter,system-ui,sans-serif}
+  body{min-height:100vh;padding:18px 26px 40px}
+  .num{font-family:"Barlow Condensed",Inter,sans-serif;font-variant-numeric:tabular-nums}
+
+  /* Cabeçalho */
+  header{display:flex;align-items:center;gap:22px;padding-bottom:14px;border-bottom:3px solid var(--line)}
+  .logo{height:74px;display:flex;align-items:center}
+  .logo img{height:74px;width:auto;display:block}
+  .logo-txt{background:var(--gold);color:#071528;border-radius:12px;padding:8px 16px;font-weight:800;line-height:1;text-align:center}
+  .logo-txt b{display:block;font-size:15px;letter-spacing:.12em}
+  .logo-txt span{display:block;font-family:"Barlow Condensed";font-size:34px}
+  .titulo{flex:1}
+  .titulo h1{font-family:"Barlow Condensed";font-size:44px;font-weight:800;letter-spacing:.02em;line-height:1}
+  .titulo p{font-size:20px;color:var(--muted);font-weight:600;margin-top:4px}
+  .aovivo{text-align:right}
+  .badge{display:inline-flex;align-items:center;gap:10px;background:var(--lula);color:#fff;font-weight:800;font-size:22px;padding:8px 18px;border-radius:999px;letter-spacing:.08em}
+  .badge i{width:14px;height:14px;border-radius:50%;background:#fff;animation:pisca 1.2s infinite}
+  .badge.off{background:var(--grey)}
+  @keyframes pisca{50%{opacity:.2}}
+  .hora{font-size:18px;color:var(--muted);margin-top:8px;font-weight:600}
+
+  /* Progresso */
+  .progresso{display:flex;align-items:center;gap:22px;margin:18px 0 16px;background:var(--bg2);border:2px solid var(--line);border-radius:16px;padding:14px 22px}
+  .progresso .rot{font-size:24px;font-weight:700;white-space:nowrap}
+  .progresso .rot b{font-family:"Barlow Condensed";font-size:40px;color:var(--gold)}
+  .barra{flex:1;height:30px;background:#0A1B33;border-radius:999px;overflow:hidden;border:2px solid var(--line)}
+  .barra div{height:100%;background:linear-gradient(90deg,var(--gold),#FFE07A);transition:width .8s}
+  .progresso .pct{font-family:"Barlow Condensed";font-size:46px;font-weight:800;color:var(--gold);min-width:120px;text-align:right}
+
+  /* Candidatos */
+  .duelo{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .cand{position:relative;border-radius:22px;padding:20px 26px 22px;overflow:hidden;border:4px solid transparent}
+  .cand.lula{background:linear-gradient(135deg,var(--lula),var(--lula-d))}
+  .cand.flavio{background:linear-gradient(135deg,var(--flavio),var(--flavio-d))}
+  .cand.lider{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,198,41,.25),0 10px 40px rgba(0,0,0,.4)}
+  .cand .topo{display:flex;align-items:center;gap:16px}
+  .cand .nro{font-family:"Barlow Condensed";font-size:54px;font-weight:800;background:rgba(255,255,255,.18);border-radius:14px;padding:0 16px;line-height:1.15}
+  .cand .nome{font-family:"Barlow Condensed";font-size:52px;font-weight:800;line-height:1}
+  .cand .partido{font-size:20px;font-weight:700;opacity:.9}
+  .cand .frente{position:absolute;top:18px;right:20px;background:var(--gold);color:#071528;font-weight:800;font-size:22px;padding:6px 16px;border-radius:999px;letter-spacing:.06em;display:none}
+  .cand.lider .frente{display:block}
+  .cand .pctg{font-family:"Barlow Condensed";font-size:132px;font-weight:800;line-height:.95;margin-top:10px}
+  .cand .pctg small{font-size:60px}
+  .cand .votos{font-size:30px;font-weight:700}
+  .cand .votos b{font-family:"Barlow Condensed";font-size:46px}
+  .cand .sub{font-size:17px;opacity:.85;font-weight:600}
+
+  .cabo{margin:16px 0 6px;height:42px;border-radius:999px;overflow:hidden;display:flex;border:3px solid var(--line);position:relative}
+  .cabo .l{background:var(--lula);transition:width .8s}
+  .cabo .f{background:var(--flavio);flex:1}
+  .cabo .meio{position:absolute;left:50%;top:-6px;bottom:-6px;width:4px;background:#fff;transform:translateX(-2px)}
+  .diferenca{text-align:center;font-size:30px;font-weight:700;margin:6px 0 4px}
+  .diferenca b{font-family:"Barlow Condensed";font-size:44px;color:var(--gold)}
+
+  /* Números gerais */
+  .gerais{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+  .gcard{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px 18px}
+  .gcard .r{font-size:19px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+  .gcard .v{font-family:"Barlow Condensed";font-size:56px;font-weight:800;line-height:1.05}
+  .gcard .p{font-size:18px;color:var(--muted);font-weight:600}
+
+  /* Última seção */
+  .ultima{margin-top:16px;background:linear-gradient(90deg,#20385E,#13284A);border:3px solid var(--gold);border-radius:18px;padding:14px 22px;display:flex;align-items:center;gap:22px}
+  .ultima .tag{background:var(--gold);color:#071528;font-weight:800;font-size:20px;padding:8px 14px;border-radius:10px;white-space:nowrap}
+  .ultima .info{flex:1;font-size:26px;font-weight:700}
+  .ultima .info small{display:block;font-size:19px;color:var(--muted);font-weight:600}
+  .ultima .res{font-family:"Barlow Condensed";font-size:40px;font-weight:800;white-space:nowrap}
+
+  h2{font-family:"Barlow Condensed";font-size:38px;font-weight:800;margin:30px 0 12px;letter-spacing:.02em}
+  h2 span{color:var(--muted);font-size:24px;font-weight:700;font-family:Inter}
+
+  /* Escolas */
+  .escolas{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+  .esc{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:16px 20px}
+  .esc h3{font-size:24px;font-weight:800;line-height:1.15}
+  .esc .apur{font-size:18px;color:var(--muted);font-weight:600;margin:4px 0 10px}
+  .linha{display:flex;align-items:center;gap:10px;margin:6px 0}
+  .linha .n{width:150px;font-weight:800;font-size:22px}
+  .linha .b{flex:1;height:26px;background:#0A1B33;border-radius:8px;overflow:hidden}
+  .linha .b div{height:100%;transition:width .8s}
+  .linha .q{width:130px;text-align:right;font-family:"Barlow Condensed";font-size:32px;font-weight:800}
+  .venc{margin-top:10px;font-size:20px;font-weight:800;padding:6px 12px;border-radius:10px;display:inline-block}
+
+  /* Seções */
+  .secoes{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+  .sec{border-radius:16px;padding:12px 16px;border:3px solid var(--line);background:var(--card)}
+  .sec.pend{opacity:.55;border-style:dashed}
+  .sec.vl{border-color:var(--lula);background:linear-gradient(160deg,rgba(227,19,44,.35),var(--card) 70%)}
+  .sec.vf{border-color:var(--flavio);background:linear-gradient(160deg,rgba(31,111,235,.4),var(--card) 70%)}
+  .sec.emp{border-color:var(--gold)}
+  .sec .cab{display:flex;justify-content:space-between;align-items:baseline}
+  .sec .sn{font-family:"Barlow Condensed";font-size:40px;font-weight:800;line-height:1}
+  .sec .sn small{font-size:20px;color:var(--muted);font-family:Inter;font-weight:700}
+  .sec .st{font-size:16px;font-weight:800;padding:4px 10px;border-radius:8px}
+  .sec .es{font-size:16px;color:var(--muted);font-weight:600;margin:4px 0 8px;line-height:1.2;min-height:38px}
+  .sec .vv{display:flex;justify-content:space-between;font-size:20px;font-weight:700}
+  .sec .vv b{font-family:"Barlow Condensed";font-size:32px}
+  .sec .bn{font-size:15px;color:var(--muted);font-weight:600;margin-top:4px}
+  .st.l{background:var(--lula)} .st.f{background:var(--flavio)} .st.e{background:var(--gold);color:#071528} .st.p{background:var(--grey)}
+
+  .aviso{margin-top:16px;background:#4A1F00;border:2px solid #FF9F1C;color:#FFD9A8;border-radius:12px;padding:10px 16px;font-size:18px;font-weight:600;display:none}
+  footer{margin-top:28px;color:var(--muted);font-size:15px;text-align:center}
+  .demo{position:fixed;bottom:12px;left:12px;background:#7C3AED;color:#fff;font-weight:800;padding:6px 12px;border-radius:8px;font-size:14px}
+
+  @media (max-width:900px){
+    body{padding:12px 16px 30px}
+    .duelo{grid-template-columns:1fr}
+    .gerais{grid-template-columns:1fr 1fr}
+    .titulo h1{font-size:30px}.titulo p{font-size:16px}
+    .cand .pctg{font-size:90px}.cand .nome{font-size:38px}
+    header{flex-wrap:wrap}
+    .progresso,.ultima{flex-wrap:wrap}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo" id="logo">
+    <img src="logo.png" alt="Rádio Amizade FM" onerror="this.parentNode.innerHTML='<div class=&quot;logo-txt&quot;><b>RÁDIO</b><span>AMIZADE FM</span></div>'">
+  </div>
+  <div class="titulo">
+    <h1>APURAÇÃO 2º TURNO · PRESIDENTE</h1>
+    <p>Eleições 2026 · Resultado em Dobrada/SP · Fonte: apuração da rádio</p>
+  </div>
+  <div class="aovivo">
+    <div class="badge" id="badge"><i></i>AO VIVO</div>
+    <div class="hora" id="hora">Carregando…</div>
+  </div>
+</header>
+
+<section class="progresso">
+  <div class="rot">SEÇÕES APURADAS: <b id="apuradas">0</b> de <b id="totalSec">0</b></div>
+  <div class="barra"><div id="barra" style="width:0%"></div></div>
+  <div class="pct" id="pctApur">0%</div>
+</section>
+
+<section class="duelo">
+  <div class="cand lula" id="cLula">
+    <div class="frente">★ À FRENTE</div>
+    <div class="topo"><div class="nro">13</div><div><div class="nome">LULA</div><div class="partido">PT</div></div></div>
+    <div class="pctg num" id="pLula">0,0<small>%</small></div>
+    <div class="votos"><b id="vLula">0</b> votos</div>
+    <div class="sub">dos votos válidos</div>
+  </div>
+  <div class="cand flavio" id="cFlavio">
+    <div class="frente">★ À FRENTE</div>
+    <div class="topo"><div class="nro">22</div><div><div class="nome">FLÁVIO BOLSONARO</div><div class="partido">PL</div></div></div>
+    <div class="pctg num" id="pFlavio">0,0<small>%</small></div>
+    <div class="votos"><b id="vFlavio">0</b> votos</div>
+    <div class="sub">dos votos válidos</div>
+  </div>
+</section>
+
+<div class="cabo"><div class="l" id="caboL" style="width:50%"></div><div class="f"></div><div class="meio"></div></div>
+<div class="diferenca" id="dif">Aguardando a primeira seção…</div>
+
+<section class="gerais">
+  <div class="gcard"><div class="r">Votos válidos</div><div class="v" id="gValidos">0</div><div class="p">Lula + Flávio</div></div>
+  <div class="gcard"><div class="r">Brancos</div><div class="v" id="gBrancos">0</div><div class="p" id="gBrancosP">0% do total</div></div>
+  <div class="gcard"><div class="r">Nulos</div><div class="v" id="gNulos">0</div><div class="p" id="gNulosP">0% do total</div></div>
+  <div class="gcard"><div class="r">Total apurado</div><div class="v" id="gTotal">0</div><div class="p">todos os votos</div></div>
+</section>
+
+<section class="ultima" id="ultima" style="display:none">
+  <div class="tag">ÚLTIMA SEÇÃO</div>
+  <div class="info" id="ultInfo"></div>
+  <div class="res" id="ultRes"></div>
+</section>
+
+<div class="aviso" id="aviso"></div>
+
+<h2>RESULTADO POR ESCOLA <span>(local de votação)</span></h2>
+<section class="escolas" id="escolas"></section>
+
+<h2>RESULTADO POR SEÇÃO <span>(vermelho = Lula · azul = Flávio · tracejado = aguardando)</span></h2>
+<section class="secoes" id="secoes"></section>
+
+<footer>Rádio Amizade FM · Painel atualiza sozinho a cada 10 segundos · Não precisa recarregar a página</footer>
+
+<script>
+const SHEET_ID = '12sgl7p-nUPdEIgJCBAf1JXWnP54KaZUIfygwJp-J6LE';
+const INTERVALO = 10000;
+const DEMO = new URLSearchParams(location.search).has('demo');
+
+const fmt = n => n.toLocaleString('pt-BR');
+const pct = (a, b) => b ? (a / b * 100) : 0;
+const fmtP = v => v.toLocaleString('pt-BR', {minimumFractionDigits:1, maximumFractionDigits:1});
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function parseCSV(txt) {
+  const rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < txt.length; i++) {
+    const c = txt[i];
+    if (q) { if (c === '"') { if (txt[i+1] === '"') { cur += '"'; i++; } else q = false; } else cur += c; }
+    else if (c === '"') q = true;
+    else if (c === ',') { row.push(cur); cur = ''; }
+    else if (c === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; }
+    else if (c !== '\r') cur += c;
+  }
+  if (cur || row.length) { row.push(cur); rows.push(row); }
+  return rows;
+}
+const toInt = v => { const n = parseInt(String(v).replace(/\D/g, ''), 10); return isNaN(n) ? 0 : n; };
+
+async function lerAba(aba, range) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&headers=0&sheet=${encodeURIComponent(aba)}&range=${range}&_=${Date.now()}`;
+  const r = await fetch(url, {cache:'no-store'});
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const t = await r.text();
+  if (t.trim().startsWith('<')) throw new Error('planilha não está pública');
+  return parseCSV(t);
+}
+
+// Dados de demonstração (abrir com ?demo no endereço)
+const DEMO_SECOES = [[1,'Escola Estadual Antonio Comar'],[2,'Escola Estadual Antonio Comar'],[3,'Escola Estadual Antonio Comar'],[4,'Escola Estadual Antonio Comar'],[5,'Escola Estadual Antonio Comar'],[6,'Escola Estadual Antonio Comar'],[95,'Escola Estadual Antonio Comar'],[138,'Escola Estadual Antonio Comar'],[146,'Escola Estadual Antonio Comar'],[148,'Escola Estadual Antonio Comar'],[243,'Escola Estadual Antonio Comar'],[67,'Escola Dr. Celso Barbieri'],[72,'Escola Dr. Celso Barbieri'],[79,'Escola Dr. Celso Barbieri'],[105,'Escola Dr. Celso Barbieri'],[214,'Escola Dr. Celso Barbieri'],[159,'Escola Professora Adreana Comar'],[171,'Escola Professora Adreana Comar'],[179,'Escola Professora Adreana Comar'],[206,'Escola Professora Adreana Comar']];
+let demoN = 6;
+function dadosDemo() {
+  demoN = Math.min(demoN + 1, DEMO_SECOES.length);
+  const secoes = DEMO_SECOES.map(([n, e]) => [String(n), e, '']);
+  const votos = DEMO_SECOES.slice(0, demoN).map(([n], i) => {
+    const s = (n * 7919) % 97;
+    return [String(n), String(110 + s), String(95 + (s * 3) % 60), String(3 + s % 6), String(5 + s % 9)];
+  });
+  return {secoes, votos};
+}
+
+let falhas = 0;
+async function atualizar() {
+  let secoes, votos;
+  try {
+    if (DEMO) ({secoes, votos} = dadosDemo());
+    else [secoes, votos] = await Promise.all([lerAba('Seções', 'A2:C300'), lerAba('Votos', 'A2:E1000')]);
+    falhas = 0;
+    $('badge').className = 'badge'; $('badge').innerHTML = '<i></i>AO VIVO';
+  } catch (e) {
+    falhas++;
+    console.error(e);
+    if (falhas >= 2) { $('badge').className = 'badge off'; $('badge').textContent = 'RECONECTANDO…'; }
+    return;
+  }
+  desenhar(secoes, votos);
+  $('hora').textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR');
+}
+
+function desenhar(secRows, votRows) {
+  // Cadastro de seções (ordem da planilha)
+  const cad = new Map();
+  secRows.forEach(r => { const n = toInt(r[0]); if (n) cad.set(n, {escola: (r[1] || '').trim() || 'Escola não informada'}); });
+
+  // Votos: se a mesma seção for lançada 2x, vale a última linha
+  const res = new Map(); const dup = new Set(); let ultima = null;
+  votRows.forEach(r => {
+    const n = toInt(r[0]); if (!n) return;
+    if (r.slice(1, 5).every(v => String(v).trim() === '')) return;
+    if (res.has(n)) dup.add(n);
+    const v = {l: toInt(r[1]), f: toInt(r[2]), b: toInt(r[3]), nu: toInt(r[4])};
+    res.set(n, v); ultima = n;
+  });
+
+  const naoCad = [...res.keys()].filter(n => !cad.has(n));
+  naoCad.forEach(n => cad.set(n, {escola: 'Seção não cadastrada'}));
+
+  let L = 0, F = 0, B = 0, N = 0;
+  res.forEach(v => { L += v.l; F += v.f; B += v.b; N += v.nu; });
+  const val = L + F, tot = val + B + N;
+  const pL = pct(L, val), pF = pct(F, val);
+
+  const totalSec = cad.size, apur = res.size, pA = pct(apur, totalSec);
+  $('apuradas').textContent = apur; $('totalSec').textContent = totalSec;
+  $('barra').style.width = pA + '%'; $('pctApur').textContent = Math.round(pA) + '%';
+
+  $('pLula').innerHTML = fmtP(pL) + '<small>%</small>';
+  $('pFlavio').innerHTML = fmtP(pF) + '<small>%</small>';
+  $('vLula').textContent = fmt(L); $('vFlavio').textContent = fmt(F);
+  $('cLula').classList.toggle('lider', L > F);
+  $('cFlavio').classList.toggle('lider', F > L);
+  $('caboL').style.width = (val ? pL : 50) + '%';
+
+  if (!apur) $('dif').textContent = 'Aguardando a primeira seção…';
+  else if (L === F) $('dif').innerHTML = '<b>EMPATE</b> — ' + fmt(L) + ' votos para cada';
+  else {
+    const quem = L > F ? 'LULA' : 'FLÁVIO BOLSONARO';
+    $('dif').innerHTML = quem + ' está à frente por <b>' + fmt(Math.abs(L - F)) + '</b> votos';
+  }
+
+  $('gValidos').textContent = fmt(val);
+  $('gBrancos').textContent = fmt(B); $('gBrancosP').textContent = fmtP(pct(B, tot)) + '% do total';
+  $('gNulos').textContent = fmt(N); $('gNulosP').textContent = fmtP(pct(N, tot)) + '% do total';
+  $('gTotal').textContent = fmt(tot);
+
+  // Última seção lançada
+  if (ultima !== null) {
+    const v = res.get(ultima);
+    $('ultima').style.display = 'flex';
+    $('ultInfo').innerHTML = 'Seção ' + ultima + '<small>' + esc(cad.get(ultima).escola) + '</small>';
+    $('ultRes').innerHTML = '<span style="color:#FF6B7D">LULA ' + fmt(v.l) + '</span> &nbsp;×&nbsp; <span style="color:#7FB2FF">FLÁVIO ' + fmt(v.f) + '</span>';
+  } else $('ultima').style.display = 'none';
+
+  // Avisos para quem digita
+  const avisos = [];
+  if (dup.size) avisos.push('Atenção: seção ' + [...dup].join(', ') + ' foi lançada mais de uma vez — o painel usa a última linha.');
+  if (naoCad.length) avisos.push('Seção ' + naoCad.join(', ') + ' não está na aba Seções.');
+  $('aviso').style.display = avisos.length ? 'block' : 'none';
+  $('aviso').textContent = avisos.join('  ');
+
+  // Por escola
+  const escolas = new Map();
+  cad.forEach((c, n) => {
+    if (!escolas.has(c.escola)) escolas.set(c.escola, {total: 0, apur: 0, l: 0, f: 0, b: 0, nu: 0});
+    const e = escolas.get(c.escola); e.total++;
+    const v = res.get(n); if (v) { e.apur++; e.l += v.l; e.f += v.f; e.b += v.b; e.nu += v.nu; }
+  });
+  $('escolas').innerHTML = [...escolas].map(([nome, e]) => {
+    const vv = e.l + e.f, max = Math.max(e.l, e.f, 1);
+    let venc = '<span class="venc" style="background:var(--grey)">Aguardando</span>';
+    if (e.apur) venc = e.l > e.f ? '<span class="venc" style="background:var(--lula)">LULA VENCE AQUI</span>'
+      : e.f > e.l ? '<span class="venc" style="background:var(--flavio)">FLÁVIO VENCE AQUI</span>'
+      : '<span class="venc" style="background:var(--gold);color:#071528">EMPATE</span>';
+    return `<div class="esc"><h3>${esc(nome)}</h3>
+      <div class="apur">${e.apur} de ${e.total} seções apuradas</div>
+      <div class="linha"><div class="n" style="color:#FF6B7D">LULA</div><div class="b"><div style="width:${e.l/max*100}%;background:var(--lula)"></div></div><div class="q">${fmt(e.l)}</div></div>
+      <div class="linha"><div class="n" style="color:#7FB2FF">FLÁVIO</div><div class="b"><div style="width:${e.f/max*100}%;background:var(--flavio)"></div></div><div class="q">${fmt(e.f)}</div></div>
+      <div class="apur" style="margin:6px 0 0">${vv ? 'Lula ' + fmtP(pct(e.l, vv)) + '% · Flávio ' + fmtP(pct(e.f, vv)) + '%' : '&nbsp;'} · Brancos ${fmt(e.b)} · Nulos ${fmt(e.nu)}</div>
+      ${venc}</div>`;
+  }).join('');
+
+  // Por seção
+  $('secoes').innerHTML = [...cad].map(([n, c]) => {
+    const v = res.get(n);
+    if (!v) return `<div class="sec pend"><div class="cab"><div class="sn"><small>SEÇÃO</small> ${n}</div></div><div class="es">${esc(c.escola)}</div><span class="st p">AGUARDANDO</span></div>`;
+    const cls = v.l > v.f ? 'vl' : v.f > v.l ? 'vf' : 'emp';
+    const st = v.l > v.f ? '<span class="st l">LULA</span>' : v.f > v.l ? '<span class="st f">FLÁVIO</span>' : '<span class="st e">EMPATE</span>';
+    return `<div class="sec ${cls}"><div class="cab"><div class="sn"><small>SEÇÃO</small> ${n}</div>${st}</div>
+      <div class="es">${esc(c.escola)}</div>
+      <div class="vv"><span>Lula <b>${fmt(v.l)}</b></span><span>Flávio <b>${fmt(v.f)}</b></span></div>
+      <div class="bn">Brancos ${fmt(v.b)} · Nulos ${fmt(v.nu)}</div></div>`;
+  }).join('');
+}
+
+if (DEMO) document.body.insertAdjacentHTML('beforeend', '<div class="demo">MODO DEMONSTRAÇÃO</div>');
+atualizar();
+setInterval(atualizar, INTERVALO);
+</script>
+</body>
+</html>
